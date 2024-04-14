@@ -13,7 +13,7 @@ class WeightModalWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WeightModalStateWidget createState() => _WeightModalStateWidget();
+  State<WeightModalWidget> createState() => _WeightModalStateWidget();
 }
 
 class _WeightModalStateWidget extends State<WeightModalWidget> {

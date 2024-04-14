@@ -31,7 +31,7 @@ abstract class Titles {
   static var warning = 'Внимание';
   static var required_fields_message =
       'Пожалуйста, заполните все обязательные поля';
-  static var phone_validate = 'Неверный формат номера телефона';
+  static var invalid_phone = 'Неверный формат номера телефона';
   static var no_results = 'Нет результатов';
   static var privacy_policy = 'Политика конфиденциальности';
 }

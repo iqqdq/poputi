@@ -43,7 +43,7 @@ class InputWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _InputState createState() => _InputState();
+  State<InputWidget> createState() => _InputState();
 }
 
 class _InputState extends State<InputWidget> {
@@ -56,7 +56,7 @@ class _InputState extends State<InputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final _textFormField = TextFormField(
+    final textFormField = TextFormField(
       maxLines: widget.maxLines ?? 1,
       maxLength: widget.maxLength ?? TextField.noMaxLength,
       keyboardAppearance: widget.keyboardAppearance ?? Brightness.light,
@@ -156,7 +156,7 @@ class _InputState extends State<InputWidget> {
                       ? HexColors.red
                       : HexColors.light_gray),
           color: HexColors.light_gray),
-      child: _textFormField,
+      child: textFormField,
     );
   }
 }

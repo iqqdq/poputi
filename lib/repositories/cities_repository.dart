@@ -8,8 +8,8 @@ class CitiesRepository {
     Pagination pagination,
     String search,
   ) async {
-    dynamic json = await WebService().get(citiesUrl +
-        '?page=${pagination.number}&size=${pagination.size}&search=$search');
+    dynamic json = await WebService().get(
+        '$citiesUrl?page=${pagination.number}&size=${pagination.size}&search=$search');
 
     try {
       return Cities.fromJson(json);

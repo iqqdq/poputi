@@ -21,51 +21,51 @@ class AnnouncementItemWidget extends StatelessWidget {
   final VoidCallback onWhatsAppTap;
   final VoidCallback onTelegramTap;
 
-  const AnnouncementItemWidget(
-      {Key? key,
-      required this.name,
-      required this.phone,
-      required this.hasWhatsapp,
-      required this.hasTelegram,
-      required this.fromDateTime,
-      required this.toDateTime,
-      required this.comment,
-      required this.weight,
-      required this.price,
-      required this.toCity,
-      required this.fromCity,
-      required this.onPhoneTap,
-      required this.onWhatsAppTap,
-      required this.onTelegramTap})
-      : super(key: key);
+  const AnnouncementItemWidget({
+    Key? key,
+    required this.name,
+    required this.phone,
+    required this.hasWhatsapp,
+    required this.hasTelegram,
+    required this.fromDateTime,
+    required this.toDateTime,
+    required this.comment,
+    required this.weight,
+    required this.price,
+    required this.toCity,
+    required this.fromCity,
+    required this.onPhoneTap,
+    required this.onWhatsAppTap,
+    required this.onTelegramTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _toHour = toDateTime.hour.toString().length == 1
+    final toHour = toDateTime.hour.toString().length == 1
         ? '0${toDateTime.hour}'
         : toDateTime.hour;
-    final _toMinute = toDateTime.minute.toString().length == 1
+    final toMinute = toDateTime.minute.toString().length == 1
         ? '0${toDateTime.minute}'
         : toDateTime.minute;
 
-    final _toD = DateFormat.d('ru').format(toDateTime);
-    final _toMMM = DateFormat.MMM('ru').format(toDateTime);
-    final _toE = DateFormat.E('ru').format(fromDateTime);
+    final toD = DateFormat.d('ru').format(toDateTime);
+    final toMMM = DateFormat.MMM('ru').format(toDateTime);
+    final toE = DateFormat.E('ru').format(fromDateTime);
 
-    final _fromHour = fromDateTime.hour.toString().length == 1
+    final fromHour = fromDateTime.hour.toString().length == 1
         ? '0${fromDateTime.hour}'
         : fromDateTime.hour;
-    final _fromMinute = fromDateTime.minute.toString().length == 1
+    final fromMinute = fromDateTime.minute.toString().length == 1
         ? '0${fromDateTime.minute}'
         : fromDateTime.minute;
 
-    final _fromD = DateFormat.d('ru').format(fromDateTime);
-    final _fromMMM = DateFormat.MMM('ru').format(fromDateTime);
-    final _fromE = DateFormat.E('ru').format(fromDateTime);
+    final fromD = DateFormat.d('ru').format(fromDateTime);
+    final fromMMM = DateFormat.MMM('ru').format(fromDateTime);
+    final fromE = DateFormat.E('ru').format(fromDateTime);
 
-    final _weight =
+    final formattedWeight =
         weight % 1 == 0.0 ? weight.toInt().toString() : weight.toString();
-    final _price = price == 0.0
+    final formattedPrice = price == 0.0
         ? ''
         : price % 1 == 0.0
             ? price.toInt().toString()
@@ -162,7 +162,7 @@ class AnnouncementItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     /// FROM TIME
-                    Text('$_fromHour:$_fromMinute',
+                    Text('$fromHour:$fromMinute',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 12.0,
@@ -171,7 +171,7 @@ class AnnouncementItemWidget extends StatelessWidget {
                     const SizedBox(height: 4.0),
 
                     /// FROM DATE
-                    Text('$_fromD $_fromMMM, $_fromE',
+                    Text('$fromD $fromMMM, $fromE',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 12.0,
@@ -185,11 +185,12 @@ class AnnouncementItemWidget extends StatelessWidget {
                 Expanded(
                     child: Text(fromCity.name,
                         style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                            color: HexColors.dark,
-                            overflow: TextOverflow.ellipsis))),
+                          fontFamily: 'Montserrat',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          color: HexColors.dark,
+                          overflow: TextOverflow.ellipsis,
+                        ))),
               ])),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 6.0),
@@ -206,13 +207,16 @@ class AnnouncementItemWidget extends StatelessWidget {
 
           /// TO
           Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+              padding: const EdgeInsets.only(
+                left: 12.0,
+                right: 12.0,
+              ),
               child: Row(children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     /// TO TIME
-                    Text('$_toHour:$_toMinute',
+                    Text('$toHour:$toMinute',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 12.0,
@@ -221,7 +225,7 @@ class AnnouncementItemWidget extends StatelessWidget {
                     const SizedBox(height: 4.0),
 
                     /// TO DATE
-                    Text('$_toD $_toMMM, $_toE',
+                    Text('$toD $toMMM, $toE',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 12.0,
@@ -263,10 +267,10 @@ class AnnouncementItemWidget extends StatelessWidget {
                         ))),
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   /// PRICE
-                  _price.isEmpty
+                  formattedPrice.isEmpty
                       ? Container()
                       : Text(
-                          '${Titles.begin_price} $_price ${Titles.rub.toLowerCase()}',
+                          '${Titles.begin_price} $formattedPrice ${Titles.rub.toLowerCase()}',
                           style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 16.0,
@@ -283,7 +287,7 @@ class AnnouncementItemWidget extends StatelessWidget {
                     const SizedBox(width: 4.0),
                     Padding(
                         padding: const EdgeInsets.only(top: 2.0),
-                        child: Text('$_weight ${Titles.kg}',
+                        child: Text('$formattedWeight ${Titles.kg}',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: 16.0,

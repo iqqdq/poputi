@@ -1,4 +1,4 @@
-package com.example.poputi
+package com.identifier.poputi
 
 import io.flutter.embedding.android.FlutterActivity
 

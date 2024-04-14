@@ -66,7 +66,7 @@ class RuAwesomeCalendarDialog extends StatefulWidget {
   final VoidCallback? onResetTap;
 
   @override
-  _RuAwesomeCalendarDialogState createState() => _RuAwesomeCalendarDialogState(
+  State<RuAwesomeCalendarDialog> createState() => _RuAwesomeCalendarDialogState(
       // currentMonth: initialDate,
       // selectedDates: selectedDates,
       // selectionMode: selectionMode,
@@ -240,12 +240,12 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _ruDateFormat = DateFormat.E('ru');
+    final ruDateFormat = DateFormat.E('ru');
 
     return Row(
       children: <Widget>[
         Expanded(
-          child: Text(_ruDateFormat.format(monday),
+          child: Text(ruDateFormat.format(monday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',
@@ -254,7 +254,7 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
               )),
         ),
         Expanded(
-          child: Text(_ruDateFormat.format(tuesday),
+          child: Text(ruDateFormat.format(tuesday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',
@@ -263,7 +263,7 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
               )),
         ),
         Expanded(
-          child: Text(_ruDateFormat.format(wednesday),
+          child: Text(ruDateFormat.format(wednesday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',
@@ -272,7 +272,7 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
               )),
         ),
         Expanded(
-          child: Text(_ruDateFormat.format(thursday),
+          child: Text(ruDateFormat.format(thursday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',
@@ -281,7 +281,7 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
               )),
         ),
         Expanded(
-          child: Text(_ruDateFormat.format(friday),
+          child: Text(ruDateFormat.format(friday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',
@@ -290,7 +290,7 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
               )),
         ),
         Expanded(
-          child: Text(_ruDateFormat.format(saturday),
+          child: Text(ruDateFormat.format(saturday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',
@@ -299,7 +299,7 @@ class RuWeekdayLabelsWidget extends StatelessWidget {
               )),
         ),
         Expanded(
-          child: Text(_ruDateFormat.format(sunday),
+          child: Text(ruDateFormat.format(sunday),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Montserrat',

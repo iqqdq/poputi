@@ -1,11 +1,14 @@
+import 'package:awesome_calendar/awesome_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:poputi/components/button_widget.dart';
 import 'package:poputi/components/indicator_widget.dart';
+import 'package:poputi/components/ru_awesome_calendar_dialog.dart';
 import 'package:poputi/constants/hex_colors.dart';
 import 'package:poputi/constants/titles.dart';
 import 'package:poputi/models/announcements_view_model.dart';
 import 'package:poputi/screens/announcements/components/announcement_item_widget.dart';
+import 'package:poputi/screens/cities/cities_screen.dart';
 import 'package:poputi/services/loading_status.dart';
 import 'package:poputi/services/pagination.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +18,7 @@ class AnnouncementsScreenBodyWidget extends StatefulWidget {
   const AnnouncementsScreenBodyWidget({Key? key}) : super(key: key);
 
   @override
-  _AnnouncementsScreenBodyState createState() =>
+  State<AnnouncementsScreenBodyWidget> createState() =>
       _AnnouncementsScreenBodyState();
 }
 
@@ -25,6 +28,8 @@ class _AnnouncementsScreenBodyState
       ScrollController(keepScrollOffset: true);
   Pagination _pagination = Pagination(number: 1, size: 50);
   bool _isRefresh = false;
+
+  late AnnouncementsViewModel _announcementsViewModel;
 
   @override
   void initState() {
@@ -51,47 +56,111 @@ class _AnnouncementsScreenBodyState
     setState(() => _isRefresh = !_isRefresh);
   }
 
+  // MARK: -
+  // MARK: - ACTIONS
+
+  void _showCalendar({required bool isFrom}) async {
+    final DateTime? selectedDateTime = await showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return RuAwesomeCalendarDialog(
+            selectionMode: SelectionMode.single,
+            confirmBtnText: Titles.add,
+            cancelBtnText: Titles.reset,
+            weekdayLabels: RuWeekdayLabelsWidget(),
+            onResetTap: () => {
+                  _announcementsViewModel.changeDate(
+                    pagination: _pagination,
+                    selectedDateTime: null,
+                    isFrom: isFrom,
+                  )
+                });
+      },
+    );
+
+    if (selectedDateTime != null) {
+      _pagination = Pagination(number: 1, size: 50);
+
+      _announcementsViewModel.changeDate(
+        pagination: _pagination,
+        selectedDateTime: selectedDateTime,
+        isFrom: isFrom,
+      );
+    }
+  }
+
+  void _showCitiesScreen({required bool isFrom}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => CitiesScreenWidget(
+          city: isFrom
+              ? _announcementsViewModel.fromCity
+              : _announcementsViewModel.toCity,
+          didReturnCity: (city) => {
+            _pagination = Pagination(number: 1, size: 50),
+            _announcementsViewModel
+                .changeCity(isFrom: isFrom, city: city)
+                .whenComplete(
+                  () => _announcementsViewModel.getAnnouncementList(
+                    _pagination,
+                    _announcementsViewModel.fromCity?.id ??
+                        _announcementsViewModel.selectedFromCity.id,
+                    _announcementsViewModel.toCity?.id ??
+                        _announcementsViewModel.selectedToCity.id,
+                    _announcementsViewModel.fromDateTime ??
+                        _announcementsViewModel.selectedFromDateTime,
+                    _announcementsViewModel.toDateTime ??
+                        _announcementsViewModel.selectedToDateTime,
+                  ),
+                )
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _announcementsViewModel =
+    _announcementsViewModel =
         Provider.of<AnnouncementsViewModel>(context, listen: true);
 
-    String? _fromD = _announcementsViewModel.fromDateTime == null
+    String? fromD = _announcementsViewModel.fromDateTime == null
         ? _announcementsViewModel.selectedFromDateTime == null
             ? null
             : DateFormat.d('ru')
                 .format(_announcementsViewModel.selectedFromDateTime!)
         : DateFormat.d('ru').format(_announcementsViewModel.fromDateTime!);
 
-    String? _fromMMM = _announcementsViewModel.fromDateTime == null
+    String? fromMMM = _announcementsViewModel.fromDateTime == null
         ? _announcementsViewModel.selectedFromDateTime == null
             ? null
             : DateFormat.MMM('ru')
                 .format(_announcementsViewModel.selectedFromDateTime!)
         : DateFormat.MMM('ru').format(_announcementsViewModel.fromDateTime!);
 
-    String? _fromE = _announcementsViewModel.fromDateTime == null
+    String? fromE = _announcementsViewModel.fromDateTime == null
         ? _announcementsViewModel.selectedFromDateTime == null
             ? null
             : DateFormat.E('ru')
                 .format(_announcementsViewModel.selectedFromDateTime!)
         : DateFormat.E('ru').format(_announcementsViewModel.fromDateTime!);
 
-    final _toD = _announcementsViewModel.toDateTime == null
+    final toD = _announcementsViewModel.toDateTime == null
         ? _announcementsViewModel.selectedToDateTime == null
             ? ''
             : DateFormat.d('ru')
                 .format(_announcementsViewModel.selectedToDateTime!)
         : DateFormat.d('ru').format(_announcementsViewModel.toDateTime!);
 
-    final _toMMM = _announcementsViewModel.toDateTime == null
+    final toMMM = _announcementsViewModel.toDateTime == null
         ? _announcementsViewModel.selectedToDateTime == null
             ? ''
             : DateFormat.MMM('ru')
                 .format(_announcementsViewModel.selectedToDateTime!)
         : DateFormat.MMM('ru').format(_announcementsViewModel.toDateTime!);
 
-    final _toE = _announcementsViewModel.toDateTime == null
+    final toE = _announcementsViewModel.toDateTime == null
         ? _announcementsViewModel.selectedToDateTime == null
             ? ''
             : DateFormat.E('ru')
@@ -127,88 +196,53 @@ class _AnnouncementsScreenBodyState
                   children: [
                     Row(
                       children: [
+                        /// FROM BUTTON
                         Expanded(
-                          child:
-
-                              /// FROM BUTTON
-                              ButtonWidget(
+                          child: ButtonWidget(
                             title: _announcementsViewModel.fromCity?.name ??
                                 _announcementsViewModel.selectedFromCity.name,
                             titleColor: HexColors.dark,
-                            onTap: () =>
-                                _announcementsViewModel.showCitiesScreen(
-                              context,
-                              true,
-                              (isFiltered) => {
-                                if (isFiltered)
-                                  _pagination = Pagination(number: 1, size: 50)
-                              },
-                            ),
+                            onTap: () => _showCitiesScreen(isFrom: true),
                           ),
                         ),
                         const SizedBox(width: 13.0),
 
                         /// FROM DATE BUTTON
                         ButtonWidget(
-                            title: _fromD != null &&
-                                    _fromMMM != null &&
-                                    _fromE != null
-                                ? '$_fromD $_fromMMM, $_fromE'
-                                : Titles.when,
-                            titleColor: _fromD != null &&
-                                    _fromMMM != null &&
-                                    _fromE != null
-                                ? HexColors.dark
-                                : HexColors.gray,
-                            onTap: () => _announcementsViewModel.changeDate(
-                                context,
-                                true,
-                                (isFiltered) => {
-                                      if (isFiltered)
-                                        _pagination =
-                                            Pagination(number: 1, size: 50)
-                                    })),
+                          title:
+                              fromD != null && fromMMM != null && fromE != null
+                                  ? '$fromD $fromMMM, $fromE'
+                                  : Titles.when,
+                          titleColor:
+                              fromD != null && fromMMM != null && fromE != null
+                                  ? HexColors.dark
+                                  : HexColors.gray,
+                          onTap: () => _showCalendar(isFrom: true),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 14.0),
                     Row(
                       children: [
+                        /// TO BUTTON
                         Expanded(
-                            child:
-
-                                /// TO BUTTON
-                                ButtonWidget(
-                                    title:
-                                        _announcementsViewModel.toCity?.name ??
-                                            _announcementsViewModel
-                                                .selectedToCity.name,
-                                    titleColor: HexColors.dark,
-                                    onTap: () => _announcementsViewModel
-                                        .showCitiesScreen(
-                                            context,
-                                            false,
-                                            (isFiltered) => {
-                                                  if (isFiltered)
-                                                    _pagination = Pagination(
-                                                        number: 1, size: 50)
-                                                }))),
+                          child: ButtonWidget(
+                            title: _announcementsViewModel.toCity?.name ??
+                                _announcementsViewModel.selectedToCity.name,
+                            titleColor: HexColors.dark,
+                            onTap: () => _showCitiesScreen(isFrom: false),
+                          ),
+                        ),
                         const SizedBox(width: 13.0),
 
                         /// TO DATE BUTTON
                         ButtonWidget(
-                            title: _toD.isEmpty
-                                ? Titles.when
-                                : '$_toD $_toMMM, $_toE',
-                            titleColor:
-                                _toD.isEmpty ? HexColors.gray : HexColors.dark,
-                            onTap: () => _announcementsViewModel.changeDate(
-                                context,
-                                false,
-                                (isFiltered) => {
-                                      if (isFiltered)
-                                        _pagination =
-                                            Pagination(number: 1, size: 50)
-                                    })),
+                          title:
+                              toD.isEmpty ? Titles.when : '$toD $toMMM, $toE',
+                          titleColor:
+                              toD.isEmpty ? HexColors.gray : HexColors.dark,
+                          onTap: () => _showCalendar(isFrom: false),
+                        ),
                       ],
                     )
                   ]),

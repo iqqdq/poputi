@@ -8,7 +8,7 @@ class PrivacyPolicyScreenBodyWidget extends StatefulWidget {
   const PrivacyPolicyScreenBodyWidget({Key? key}) : super(key: key);
 
   @override
-  _PrivacyPolicyScreenBodyState createState() =>
+  State<PrivacyPolicyScreenBodyWidget> createState() =>
       _PrivacyPolicyScreenBodyState();
 }
 

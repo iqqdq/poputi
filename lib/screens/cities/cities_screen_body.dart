@@ -14,12 +14,14 @@ class CitiesScreenBodyWidget extends StatefulWidget {
   final City? city;
   final Function(City) didReturnCity;
 
-  const CitiesScreenBodyWidget(
-      {Key? key, this.city, required this.didReturnCity})
-      : super(key: key);
+  const CitiesScreenBodyWidget({
+    Key? key,
+    this.city,
+    required this.didReturnCity,
+  }) : super(key: key);
 
   @override
-  _CityScreenBodyState createState() => _CityScreenBodyState();
+  State<CitiesScreenBodyWidget> createState() => _CityScreenBodyState();
 }
 
 class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
@@ -30,6 +32,8 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
 
   bool _isRefresh = true;
   bool _isSearching = false;
+
+  late CitiesViewModel _citiesViewModel;
 
   @override
   void initState() {
@@ -62,12 +66,14 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final _citiesViewModel =
-        Provider.of<CitiesViewModel>(context, listen: true);
+    _citiesViewModel = Provider.of<CitiesViewModel>(context, listen: true);
 
     if (_isRefresh) {
       _isRefresh = !_isRefresh;
-      _citiesViewModel.getCityList(_pagination, _textEditingController.text);
+      _citiesViewModel.getCityList(
+        _pagination,
+        _textEditingController.text,
+      );
     }
 
     return Scaffold(
@@ -95,7 +101,9 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
                             _pagination.number = 1;
                             _citiesViewModel
                                 .getCityList(
-                                    _pagination, _textEditingController.text)
+                                  _pagination,
+                                  _textEditingController.text,
+                                )
                                 .then((value) =>
                                     setState(() => _isSearching = false));
                           })
@@ -133,10 +141,11 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
                                   children: [
                                     Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 20.0,
-                                            left: 20.0,
-                                            right: 20.0,
-                                            bottom: 6.0),
+                                          top: 20.0,
+                                          left: 20.0,
+                                          right: 20.0,
+                                          bottom: 6.0,
+                                        ),
                                         child: Text(
                                             _citiesViewModel.cities
                                                     ?.results[index].name ??
@@ -148,7 +157,9 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
                                             ))),
                                     Container(
                                         margin: const EdgeInsets.only(
-                                            top: 6.0, left: 20.0),
+                                          top: 6.0,
+                                          left: 20.0,
+                                        ),
                                         height: 0.5,
                                         color: _citiesViewModel.cities == null
                                             ? Colors.transparent
@@ -174,13 +185,17 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
                       ? Center(
                           child: Padding(
                               padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0, bottom: 60.0),
+                                left: 20.0,
+                                right: 20.0,
+                                bottom: 60.0,
+                              ),
                               child: Text(Titles.no_results,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 16.0,
-                                      color: HexColors.gray))))
+                                    fontFamily: 'Inter',
+                                    fontSize: 16.0,
+                                    color: HexColors.gray,
+                                  ))))
                       : Container(),
 
           /// INDICATOR

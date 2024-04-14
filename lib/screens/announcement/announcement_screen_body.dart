@@ -1,13 +1,19 @@
 import 'dart:io';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:awesome_calendar/awesome_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notification_center/notification_center.dart';
 import 'package:poputi/components/button_widget.dart';
 import 'package:poputi/components/indicator_widget.dart';
 import 'package:poputi/components/input_widget.dart';
+import 'package:poputi/components/ru_awesome_calendar_dialog.dart';
+import 'package:poputi/components/time_picker_modal_widget.dart';
+import 'package:poputi/components/weight_modal_widget.dart';
 import 'package:poputi/constants/hex_colors.dart';
 import 'package:poputi/constants/titles.dart';
 import 'package:poputi/models/announcement_view_model.dart';
+import 'package:poputi/screens/cities/cities_screen.dart';
 import 'package:poputi/services/loading_status.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +23,8 @@ class AnnouncementScreenBodyWidget extends StatefulWidget {
   const AnnouncementScreenBodyWidget({Key? key}) : super(key: key);
 
   @override
-  _AnnouncementScreenBodyState createState() => _AnnouncementScreenBodyState();
+  State<AnnouncementScreenBodyWidget> createState() =>
+      _AnnouncementScreenBodyState();
 }
 
 class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
@@ -29,6 +36,8 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
   final _phoneFocusNode = FocusNode();
   final _commentTextEditingController = TextEditingController();
   final _commentFocusNode = FocusNode();
+
+  late AnnouncementViewModel _announcementViewModel;
 
   @override
   void initState() {
@@ -57,41 +66,152 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
     super.dispose();
   }
 
+  // MARK: -
+  // MARK: - ACTIONS
+
+  void _showCitiesScreen({required bool isFrom}) => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => CitiesScreenWidget(
+          city: isFrom
+              ? _announcementViewModel.fromCity
+              : _announcementViewModel.toCity,
+          didReturnCity: (city) => _announcementViewModel.changeCity(
+            isFrom: isFrom,
+            city: city,
+          ),
+        ),
+      ));
+
+  void _showWeightModalSheet({required double initialWeight}) =>
+      showDialog<double>(
+        context: context,
+        builder: (BuildContext context) => WeightModalWidget(
+          initialWeight: initialWeight,
+          onUpdate: (weight) =>
+              _announcementViewModel.changeWeight(initialWeight),
+        ),
+      );
+
+  void _showTimeModalSheet({
+    required DateTime dateTime,
+    required bool isFrom,
+  }) =>
+      showDialog<DateTime>(
+        context: context,
+        builder: (BuildContext context) {
+          return TimePickerModalWidget(
+            initialDateTime: dateTime,
+            onUpdate: (dateTime) => _announcementViewModel.changeTime(
+              dateTime: dateTime,
+              isFrom: isFrom,
+            ),
+          );
+        },
+      );
+
+  void _createAnnouncement(
+    double? price, {
+    required BuildContext context,
+    required String name,
+    required String phone,
+    required String comment,
+  }) {
+    _announcementViewModel.fromCity != null &&
+            _announcementViewModel.toCity != null &&
+            _announcementViewModel.toDateTime != null &&
+            _announcementViewModel.fromDateTime != null &&
+            name.isNotEmpty
+        ? phone.replaceAll(RegExp(r'[^0-9]'), '').length >= 11
+            ? _announcementViewModel
+                .createAnnouncement(
+                  price,
+                  name: name,
+                  phone: phone,
+                  comment: comment,
+                )
+                .then((value) => {
+                      if (_announcementViewModel.announcement != null)
+                        {
+                          Navigator.pop(context),
+
+                          /// SHOW DART NOTIFICATION CENTER ALERT
+                          NotificationCenter()
+                              .notify('announcement_success_message'),
+                        }
+                    })
+            : _showInvalidateFiledsModalSheet(isPhoneInvalid: true)
+        : _showInvalidateFiledsModalSheet(isPhoneInvalid: false);
+  }
+
+  void _showInvalidateFiledsModalSheet({required bool isPhoneInvalid}) =>
+      Future.delayed(
+        const Duration(milliseconds: 200),
+        () => showOkAlertDialog(
+          context: context,
+          title: Titles.warning,
+          message: isPhoneInvalid
+              ? Titles.invalid_phone
+              : Titles.required_fields_message,
+        ),
+      );
+
+  void _showCalendar() async {
+    final DateTime? dateTime = await showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) {
+        return RuAwesomeCalendarDialog(
+          selectionMode: SelectionMode.single,
+          confirmBtnText: Titles.add,
+          cancelBtnText: Titles.cancel,
+          weekdayLabels: RuWeekdayLabelsWidget(),
+        );
+      },
+    );
+
+    _announcementViewModel.changeDate(
+      dateTime,
+      isFrom: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _announcementViewModel =
-        Provider.of<AnnouncementViewModel>(context, listen: true);
+    _announcementViewModel = Provider.of<AnnouncementViewModel>(
+      context,
+      listen: true,
+    );
 
-    final _fromD = DateFormat.d('ru')
+    final fromD = DateFormat.d('ru')
         .format(_announcementViewModel.fromDateTime ?? DateTime.now());
-    final _fromMMM = DateFormat.MMM('ru')
+    final fromMMM = DateFormat.MMM('ru')
         .format(_announcementViewModel.fromDateTime ?? DateTime.now());
-    final _fromE = DateFormat.E('ru')
+    final fromE = DateFormat.E('ru')
         .format(_announcementViewModel.fromDateTime ?? DateTime.now());
 
-    String? _fromTimeHour =
+    String? fromTimeHour =
         _announcementViewModel.fromTime.hour.toString().characters.length > 1
             ? _announcementViewModel.fromTime.hour.toString()
             : '0${_announcementViewModel.fromTime.hour}';
 
-    String? _fromTimeMinute =
+    String? fromTimeMinute =
         _announcementViewModel.fromTime.minute.toString().characters.length > 1
             ? _announcementViewModel.fromTime.minute.toString()
             : '0${_announcementViewModel.fromTime.minute}';
 
-    final _toD = DateFormat.d('ru')
+    final toD = DateFormat.d('ru')
         .format(_announcementViewModel.toDateTime ?? DateTime.now());
-    final _toMMM = DateFormat.MMM('ru')
+    final toMMM = DateFormat.MMM('ru')
         .format(_announcementViewModel.toDateTime ?? DateTime.now());
-    final _toE = DateFormat.E('ru')
+    final toE = DateFormat.E('ru')
         .format(_announcementViewModel.toDateTime ?? DateTime.now());
 
-    String? _toTimeHour =
+    String? toTimeHour =
         _announcementViewModel.toTime.hour.toString().characters.length > 1
             ? _announcementViewModel.toTime.hour.toString()
             : '0${_announcementViewModel.toTime.hour}';
 
-    String? _toTimeMinute =
+    String? toTimeMinute =
         _announcementViewModel.toTime.minute.toString().characters.length > 1
             ? _announcementViewModel.toTime.minute.toString()
             : '0${_announcementViewModel.toTime.minute}';
@@ -139,23 +259,22 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                       showRequiredField:
                           _announcementViewModel.emptyRequiredFileds &&
                               _announcementViewModel.fromCity == null,
-                      onTap: () => _announcementViewModel.showCitiesScreen(
-                          context, true)),
+                      onTap: () => _showCitiesScreen(isFrom: true)),
                   const SizedBox(height: 14.0),
 
                   /// TO BUTTON
                   ButtonWidget(
-                      title: _announcementViewModel.toCity?.name ??
-                          '${Titles.to} *',
-                      titleColor: _announcementViewModel.toCity == null
-                          ? HexColors.gray
-                          : HexColors.dark,
-                      isRequiredField: true,
-                      showRequiredField:
-                          _announcementViewModel.emptyRequiredFileds &&
-                              _announcementViewModel.toCity == null,
-                      onTap: () => _announcementViewModel.showCitiesScreen(
-                          context, false)),
+                    title:
+                        _announcementViewModel.toCity?.name ?? '${Titles.to} *',
+                    titleColor: _announcementViewModel.toCity == null
+                        ? HexColors.gray
+                        : HexColors.dark,
+                    isRequiredField: true,
+                    showRequiredField:
+                        _announcementViewModel.emptyRequiredFileds &&
+                            _announcementViewModel.toCity == null,
+                    onTap: () => _showCitiesScreen(isFrom: false),
+                  ),
                   const SizedBox(height: 14.0),
 
                   /// FROM DATE / TIME
@@ -171,32 +290,33 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                         Row(children: [
                           /// FROM DATE BUTTON
                           ButtonWidget(
-                              title: _announcementViewModel.fromDateTime == null
-                                  ? '${Titles.when} *'
-                                  : '$_fromD $_fromMMM, $_fromE',
-                              titleColor:
-                                  _announcementViewModel.fromDateTime == null
-                                      ? HexColors.gray
-                                      : HexColors.dark,
-                              isRequiredField: true,
-                              showRequiredField: _announcementViewModel
-                                      .emptyRequiredFileds &&
-                                  _announcementViewModel.fromDateTime == null,
-                              onTap: () => _announcementViewModel.changeDate(
-                                  context, true)),
+                            title: _announcementViewModel.fromDateTime == null
+                                ? '${Titles.when} *'
+                                : '$fromD $fromMMM, $fromE',
+                            titleColor:
+                                _announcementViewModel.fromDateTime == null
+                                    ? HexColors.gray
+                                    : HexColors.dark,
+                            isRequiredField: true,
+                            showRequiredField:
+                                _announcementViewModel.emptyRequiredFileds &&
+                                    _announcementViewModel.fromDateTime == null,
+                            onTap: () => _showCalendar(),
+                          ),
 
                           const SizedBox(width: 13.0),
 
                           ///  FROM TIME PICKER
                           ButtonWidget(
-                              title: '$_fromTimeHour:$_fromTimeMinute',
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              titleColor: HexColors.dark,
-                              isRequiredField: false,
-                              onTap: () => _announcementViewModel.changeTime(
-                                  context,
-                                  _announcementViewModel.fromTime,
-                                  true))
+                            title: '$fromTimeHour:$fromTimeMinute',
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            titleColor: HexColors.dark,
+                            isRequiredField: false,
+                            onTap: () => _showTimeModalSheet(
+                              dateTime: _announcementViewModel.fromTime,
+                              isFrom: true,
+                            ),
+                          )
                         ])
                       ]),
                   const SizedBox(height: 14.0),
@@ -214,31 +334,32 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                         Row(children: [
                           /// TO DATE BUTTON
                           ButtonWidget(
-                              title: _announcementViewModel.toDateTime == null
-                                  ? '${Titles.when} *'
-                                  : '$_toD $_toMMM, $_toE',
-                              titleColor:
-                                  _announcementViewModel.toDateTime == null
-                                      ? HexColors.gray
-                                      : HexColors.dark,
-                              isRequiredField: true,
-                              showRequiredField:
-                                  _announcementViewModel.emptyRequiredFileds &&
-                                      _announcementViewModel.toDateTime == null,
-                              onTap: () => _announcementViewModel.changeDate(
-                                  context, false)),
+                            title: _announcementViewModel.toDateTime == null
+                                ? '${Titles.when} *'
+                                : '$toD $toMMM, $toE',
+                            titleColor:
+                                _announcementViewModel.toDateTime == null
+                                    ? HexColors.gray
+                                    : HexColors.dark,
+                            isRequiredField: true,
+                            showRequiredField:
+                                _announcementViewModel.emptyRequiredFileds &&
+                                    _announcementViewModel.toDateTime == null,
+                            onTap: () => _showCalendar(),
+                          ),
                           const SizedBox(width: 13.0),
 
                           ///  TO TIME PICKER
                           ButtonWidget(
-                              title: '$_toTimeHour:$_toTimeMinute',
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              titleColor: HexColors.dark,
-                              isRequiredField: false,
-                              onTap: () => _announcementViewModel.changeTime(
-                                  context,
-                                  _announcementViewModel.fromTime,
-                                  false))
+                            title: '$toTimeHour:$toTimeMinute',
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            titleColor: HexColors.dark,
+                            isRequiredField: false,
+                            onTap: () => _announcementViewModel.changeTime(
+                              dateTime: _announcementViewModel.fromTime,
+                              isFrom: false,
+                            ),
+                          )
                         ])
                       ]),
                   const SizedBox(height: 14.0),
@@ -256,14 +377,14 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
 
                       /// WEIGHT INPUT
                       ButtonWidget(
-                          width: 100.0,
-                          title:
-                              _announcementViewModel.weight.toInt().toString(),
-                          titleColor: HexColors.dark,
-                          color: HexColors.light_gray,
-                          isRequiredField: false,
-                          onTap: () => _announcementViewModel.changeWeight(
-                              context, _announcementViewModel.weight)),
+                        width: 100.0,
+                        title: _announcementViewModel.weight.toInt().toString(),
+                        titleColor: HexColors.dark,
+                        color: HexColors.light_gray,
+                        isRequiredField: false,
+                        onTap: () => _showWeightModalSheet(
+                            initialWeight: _announcementViewModel.weight),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12.0),
@@ -352,14 +473,22 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                               activeColor: HexColors.blue,
                               trackColor: HexColors.light_gray,
                               value: _announcementViewModel.whatsAppSwitchValue,
-                              onChanged: (value) => _announcementViewModel
-                                  .changeSwitchValue(0, value))
+                              onChanged: (value) =>
+                                  _announcementViewModel.changeSwitchValue(
+                                index: 0,
+                                value: value,
+                              ),
+                            )
                           : Switch(
                               activeColor: HexColors.blue,
                               inactiveTrackColor: HexColors.light_gray,
                               value: _announcementViewModel.whatsAppSwitchValue,
-                              onChanged: (value) => _announcementViewModel
-                                  .changeSwitchValue(0, value))
+                              onChanged: (value) =>
+                                  _announcementViewModel.changeSwitchValue(
+                                index: 0,
+                                value: value,
+                              ),
+                            )
                     ],
                   ),
                   const SizedBox(height: 14.0),
@@ -381,16 +510,22 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                               trackColor: HexColors.light_gray,
                               value:
                                   _announcementViewModel.telegramAppSwitchValue,
-                              onChanged: (value) => _announcementViewModel
-                                  .changeSwitchValue(1, value),
+                              onChanged: (value) =>
+                                  _announcementViewModel.changeSwitchValue(
+                                index: 1,
+                                value: value,
+                              ),
                             )
                           : Switch(
                               activeColor: HexColors.blue,
                               inactiveTrackColor: HexColors.light_gray,
                               value:
                                   _announcementViewModel.telegramAppSwitchValue,
-                              onChanged: (value) => _announcementViewModel
-                                  .changeSwitchValue(1, value),
+                              onChanged: (value) =>
+                                  _announcementViewModel.changeSwitchValue(
+                                index: 1,
+                                value: value,
+                              ),
                             )
                     ],
                   ),
@@ -415,25 +550,14 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                       titleColor: HexColors.white,
                       fontSize: 21.0,
                       isRequiredField: false,
-                      onTap: () => _announcementViewModel
-                          .createAnnouncement(
-                            context,
+                      onTap: () => _createAnnouncement(
                             double.tryParse(_priceTextEditingController.text) ??
                                 0.0,
-                            _nameTextEditingController.text,
-                            _phoneTextEditingController.text,
-                            _commentTextEditingController.text,
-                          )
-                          .then((value) => {
-                                if (_announcementViewModel.announcement != null)
-                                  {
-                                    Navigator.pop(context),
-
-                                    /// SHOW DART NOTIFICATION CENTER ALERT
-                                    NotificationCenter()
-                                        .notify('announcement_success_message'),
-                                  }
-                              })),
+                            context: context,
+                            name: _nameTextEditingController.text,
+                            phone: _phoneTextEditingController.text,
+                            comment: _commentTextEditingController.text,
+                          )),
                   const SizedBox(height: 14.0),
                 ],
               ),
@@ -443,7 +567,10 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
             _announcementViewModel.loadingStatus == LoadingStatus.searching
                 ? const Padding(
                     padding: EdgeInsets.only(bottom: 60.0),
-                    child: Center(child: IndicatorWidget()))
+                    child: Center(
+                      child: IndicatorWidget(),
+                    ),
+                  )
                 : Container()
           ]),
           onTap: () => FocusScope.of(context).unfocus(),

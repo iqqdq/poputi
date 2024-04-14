@@ -1,15 +1,8 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:awesome_calendar/awesome_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:poputi/components/ru_awesome_calendar_dialog.dart';
-import 'package:poputi/components/time_picker_modal_widget.dart';
-import 'package:poputi/components/weight_modal_widget.dart';
-import 'package:poputi/constants/titles.dart';
 import 'package:poputi/entities/request/announcement_request_model.dart';
 import 'package:poputi/entities/response/announcement_model.dart';
 import 'package:poputi/entities/response/city_model.dart';
 import 'package:poputi/repositories/announcements_repository.dart';
-import 'package:poputi/screens/cities/cities_screen.dart';
 import 'package:poputi/services/loading_status.dart';
 
 class AnnouncementViewModel with ChangeNotifier {
@@ -51,12 +44,11 @@ class AnnouncementViewModel with ChangeNotifier {
   // MARK: - API CALL
 
   Future createAnnouncement(
-    BuildContext context,
-    double? price,
-    String name,
-    String phone,
-    String comment,
-  ) async {
+    double? price, {
+    required String name,
+    required String phone,
+    required String comment,
+  }) async {
     if (_fromCity != null &&
         _toCity != null &&
         _toDateTime != null &&
@@ -76,9 +68,9 @@ class AnnouncementViewModel with ChangeNotifier {
         );
 
         String fromIso = DateTime.fromMillisecondsSinceEpoch(
-                from.millisecondsSinceEpoch,
-                isUtc: false)
-            .toIso8601String();
+          from.millisecondsSinceEpoch,
+          isUtc: false,
+        ).toIso8601String();
 
         DateTime to = DateTime(
           _toDateTime!.year,
@@ -89,9 +81,9 @@ class AnnouncementViewModel with ChangeNotifier {
         );
 
         String toIso = DateTime.fromMillisecondsSinceEpoch(
-                to.millisecondsSinceEpoch,
-                isUtc: false)
-            .toIso8601String();
+          to.millisecondsSinceEpoch,
+          isUtc: false,
+        ).toIso8601String();
 
         await AnnouncementsRepository()
             .sendAnnouncement(AnnouncementRequest(
@@ -101,7 +93,7 @@ class AnnouncementViewModel with ChangeNotifier {
               price: price,
               name: name,
               phone: phone.contains('+')
-                  ? '+' + phone.replaceAll(RegExp(r'[^0-9]'), '')
+                  ? '+${phone.replaceAll(RegExp(r'[^0-9]'), '')}'
                   : phone.replaceAll(RegExp(r'[^0-9]'), ''),
               comment: comment,
               hasWhatsapp: _whatsAppSwitchValue,
@@ -125,30 +117,10 @@ class AnnouncementViewModel with ChangeNotifier {
       } else {
         emptyRequiredFileds = true;
         notifyListeners();
-
-        Future.delayed(
-          const Duration(milliseconds: 200),
-          () => showOkAlertDialog(
-            context: context,
-            title: Titles.warning,
-            message: phone.isEmpty
-                ? Titles.required_fields_message
-                : Titles.phone_validate,
-          ),
-        );
       }
     } else {
       emptyRequiredFileds = true;
       notifyListeners();
-
-      Future.delayed(
-        const Duration(milliseconds: 200),
-        () => showOkAlertDialog(
-          context: context,
-          title: Titles.warning,
-          message: Titles.required_fields_message,
-        ),
-      );
     }
   }
 
@@ -156,79 +128,45 @@ class AnnouncementViewModel with ChangeNotifier {
   // MARK: - FUNCTIONS
 
   Future changeDate(
-    BuildContext context,
-    bool isFrom,
-  ) async {
-    final DateTime? picked = await showDialog<DateTime>(
-      context: context,
-      builder: (BuildContext context) {
-        return RuAwesomeCalendarDialog(
-          selectionMode: SelectionMode.single,
-          confirmBtnText: Titles.add,
-          cancelBtnText: Titles.cancel,
-          weekdayLabels: RuWeekdayLabelsWidget(),
-        );
-      },
-    );
-
-    if (picked != null) {
+    DateTime? dateTime, {
+    required bool isFrom,
+  }) async {
+    if (dateTime != null) {
       if (isFrom) {
-        _fromDateTime = picked;
+        _fromDateTime = dateTime;
       } else {
-        _toDateTime = picked;
+        _toDateTime = dateTime;
       }
 
       notifyListeners();
     }
   }
 
-  void changeTime(
-    BuildContext context,
-    DateTime dateTime,
-    bool isFrom,
-  ) {
-    showDialog<DateTime>(
-      context: context,
-      builder: (BuildContext context) {
-        return TimePickerModalWidget(
-            initialDateTime: dateTime,
-            onUpdate: (dateTime) => {
-                  isFrom ? _fromTime = dateTime : _toTime = dateTime,
-                  notifyListeners()
-                });
-      },
-    );
+  void changeTime({
+    required DateTime dateTime,
+    required bool isFrom,
+  }) {
+    isFrom ? _fromTime = dateTime : _toTime = dateTime;
+    notifyListeners();
   }
 
-  void changeWeight(
-    BuildContext context,
-    double initialWeight,
-  ) {
-    showDialog<double>(
-      context: context,
-      builder: (BuildContext context) {
-        return WeightModalWidget(
-            initialWeight: initialWeight,
-            onUpdate: (weight) => {
-                  _weight = weight,
-                  notifyListeners(),
-                });
-      },
-    );
+  void changeWeight(double initialWeight) {
+    _weight = weight;
+    notifyListeners();
   }
 
-  void changeSwitchValue(
-    int index,
-    bool value,
-  ) {
+  void changeSwitchValue({
+    required int index,
+    required bool value,
+  }) {
     index == 0 ? _whatsAppSwitchValue = value : _telegramAppSwitchValue = value;
     notifyListeners();
   }
 
-  bool validate(
-    String name,
-    String phone,
-  ) {
+  bool validate({
+    required String name,
+    required String phone,
+  }) {
     bool validate = phone.characters.length == 18 &&
         _fromCity != null &&
         _toCity != null &&
@@ -241,18 +179,11 @@ class AnnouncementViewModel with ChangeNotifier {
   // MARK: -
   // MARK: - ACTIONS
 
-  void showCitiesScreen(
-    BuildContext context,
-    bool isFrom,
-  ) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => CitiesScreenWidget(
-                city: isFrom ? _fromCity : _toCity,
-                didReturnCity: (city) => {
-                      isFrom ? _fromCity = city : _toCity = city,
-                      notifyListeners()
-                    })));
+  void changeCity({
+    required bool isFrom,
+    required City city,
+  }) {
+    isFrom ? _fromCity = city : _toCity = city;
+    notifyListeners();
   }
 }

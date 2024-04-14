@@ -1,14 +1,10 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
 import 'dart:io';
-import 'package:awesome_calendar/awesome_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:poputi/components/ru_awesome_calendar_dialog.dart';
-import 'package:poputi/constants/titles.dart';
 import 'package:poputi/entities/response/announcements_model.dart';
 import 'package:poputi/entities/response/city_model.dart';
 import 'package:poputi/repositories/announcements_repository.dart';
-import 'package:poputi/screens/cities/cities_screen.dart';
 import 'package:poputi/services/loading_status.dart';
 import 'package:poputi/services/pagination.dart';
 import 'package:android_intent_plus/android_intent.dart';
@@ -76,7 +72,9 @@ class AnnouncementsViewModel with ChangeNotifier {
       if (pagination.number == 1 && _announcements!.results.isNotEmpty) {
         loadingStatus = LoadingStatus.searching;
         _announcements!.results.clear();
-        notifyListeners();
+
+        Future.delayed(
+            const Duration(milliseconds: 200), () => notifyListeners());
       }
     }
 
@@ -199,74 +197,45 @@ class AnnouncementsViewModel with ChangeNotifier {
   // MARK: -
   // MARK: - FUNCTIONS
 
-  Future changeDate(
-    BuildContext context,
-    bool isFrom,
-    Function(bool) isFiltered,
-  ) async {
-    final DateTime? picked = await showDialog<DateTime>(
-      context: context,
-      builder: (BuildContext context) {
-        return RuAwesomeCalendarDialog(
-            selectionMode: SelectionMode.single,
-            confirmBtnText: Titles.add,
-            cancelBtnText: Titles.reset,
-            weekdayLabels: RuWeekdayLabelsWidget(),
-            onResetTap: () => {
-                  isFrom ? _fromDateTime = null : _toDateTime = null,
-                  notifyListeners()
-                });
-      },
-    );
-
-    if (picked != null) {
+  Future changeDate({
+    required Pagination pagination,
+    required DateTime? selectedDateTime,
+    required bool isFrom,
+  }) async {
+    if (selectedDateTime == null) {
+      isFrom ? _fromDateTime = null : _toDateTime = null;
+      notifyListeners();
+    } else {
       DateTime dateTime = DateTime(
-        picked.year,
-        picked.month,
-        picked.day,
+        selectedDateTime.year,
+        selectedDateTime.month,
+        selectedDateTime.day,
         0,
         0,
         0,
       );
       isFrom ? _fromDateTime = dateTime : _toDateTime = dateTime;
+
+      getAnnouncementList(
+        pagination,
+        _fromCity?.id ?? selectedFromCity.id,
+        _toCity?.id ?? selectedToCity.id,
+        _fromDateTime ?? selectedFromDateTime,
+        _toDateTime ?? selectedToDateTime,
+      );
     }
+  }
 
-    isFiltered(true);
-
-    getAnnouncementList(
-      Pagination(number: 1, size: 50),
-      _fromCity?.id ?? selectedFromCity.id,
-      _toCity?.id ?? selectedToCity.id,
-      _fromDateTime ?? selectedFromDateTime,
-      _toDateTime ?? selectedToDateTime,
-    );
+  Future changeCity({
+    required bool isFrom,
+    required City city,
+  }) async {
+    isFrom ? _fromCity = city : _toCity = city;
+    notifyListeners();
   }
 
   // MARK: -
   // MARK: - ACTIONS
-
-  void showCitiesScreen(
-    BuildContext context,
-    bool isFrom,
-    Function(bool) isFiltered,
-  ) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => CitiesScreenWidget(
-                city: isFrom ? _fromCity : _toCity,
-                didReturnCity: (city) => {
-                      isFrom ? _fromCity = city : _toCity = city,
-                      isFiltered(true),
-                      getAnnouncementList(
-                        Pagination(number: 1, size: 50),
-                        _fromCity?.id ?? selectedFromCity.id,
-                        _toCity?.id ?? selectedToCity.id,
-                        _fromDateTime ?? selectedFromDateTime,
-                        _toDateTime ?? selectedToDateTime,
-                      )
-                    })));
-  }
 
   Future openWhatsApp(int index) async {
     if (announcements != null) {

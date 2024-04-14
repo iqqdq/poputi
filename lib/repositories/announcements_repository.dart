@@ -17,8 +17,8 @@ class AnnouncementsRepository {
     String arrivalDttmAfter,
     String arrivalDttmBefore,
   ) async {
-    dynamic json = await webService.get(announcementsUrl +
-        '?page=${pagination.number}&size=${pagination.size}&departure_from=$departureFrom&arrival_to=$arrivalTo&departure_dttm_after=$departureDttmAfter&departure_dttm_before=$departureDttmBefore&arrival_dttm_after=$arrivalDttmAfter&arrival_dttm_before=$arrivalDttmBefore&ordering=departure_dttm');
+    dynamic json = await webService.get(
+        '$announcementsUrl?page=${pagination.number}&size=${pagination.size}&departure_from=$departureFrom&arrival_to=$arrivalTo&departure_dttm_after=$departureDttmAfter&departure_dttm_before=$departureDttmBefore&arrival_dttm_after=$arrivalDttmAfter&arrival_dttm_before=$arrivalDttmBefore&ordering=departure_dttm');
 
     try {
       return Announcements.fromJson(json);

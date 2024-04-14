@@ -37,35 +37,37 @@ class CitiesViewModel with ChangeNotifier {
       _cities = null;
     }
 
-    await CitiesRepository().getCities(pagination, search).then((response) => {
-          if (response is Cities)
-            {
-              {
-                if (_cities == null)
-                  {_cities = response}
-                else
+    await CitiesRepository()
+        .getCities(pagination, search)
+        .then((response) => {
+              if (response is Cities)
+                {
                   {
-                    response.results.forEach((newCity) {
-                      bool found = false;
+                    if (_cities == null)
+                      {_cities = response}
+                    else
+                      {
+                        response.results.forEach((newCity) {
+                          bool found = false;
 
-                      for (var city in _cities!.results) {
-                        if (city.id == newCity.id) {
-                          found = true;
-                        }
-                      }
+                          for (var city in _cities!.results) {
+                            if (city.id == newCity.id) {
+                              found = true;
+                            }
+                          }
 
-                      if (!found) {
-                        _cities!.results.add(newCity);
+                          if (!found) {
+                            _cities!.results.add(newCity);
+                          }
+                        })
                       }
-                    })
-                  }
-              },
-              loadingStatus = LoadingStatus.completed
-            }
-          else
-            loadingStatus = LoadingStatus.error,
-          notifyListeners()
-        });
+                  },
+                  loadingStatus = LoadingStatus.completed
+                }
+              else
+                loadingStatus = LoadingStatus.error,
+            })
+        .whenComplete(() => notifyListeners());
   }
 
   // MARK: -
