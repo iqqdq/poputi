@@ -1,43 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:poputi/entities/request/announcement_request_model.dart';
-import 'package:poputi/entities/response/announcement_model.dart';
-import 'package:poputi/entities/response/city_model.dart';
+import 'package:poputi/api/models/entities/entities.dart';
+import 'package:poputi/api/models/requests/announcement_request.dart';
+import 'package:poputi/api/models/entities/announcement.dart';
 import 'package:poputi/repositories/announcements_repository.dart';
-import 'package:poputi/services/loading_status.dart';
+import 'package:poputi/utils/utils.dart';
 
 class AnnouncementViewModel with ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.empty;
   bool emptyRequiredFileds = false;
-  String? error;
-  Announcement? _announcement;
-  City? _fromCity;
-  City? _toCity;
-  DateTime? _fromDateTime;
-  DateTime? _toDateTime;
-  DateTime _fromTime = DateTime.now();
-  DateTime _toTime = DateTime.now().add(const Duration(hours: 1));
-  double _weight = 5.0;
-  bool _whatsAppSwitchValue = false;
-  bool _telegramAppSwitchValue = false;
 
+  Announcement? _announcement;
   Announcement? get announcement => _announcement;
 
+  City? _fromCity;
   City? get fromCity => _fromCity;
 
+  City? _toCity;
   City? get toCity => _toCity;
 
-  DateTime? get toDateTime => _toDateTime;
+  DateTime? _dateTime;
+  DateTime? get dateTime => _dateTime;
 
-  DateTime? get fromDateTime => _fromDateTime;
-
-  DateTime get toTime => _toTime;
-
-  DateTime get fromTime => _fromTime;
-
-  bool get whatsAppSwitchValue => _whatsAppSwitchValue;
-
+  double _weight = 5.0;
   double get weight => _weight;
 
+  bool _whatsAppSwitchValue = false;
+  bool get whatsAppSwitchValue => _whatsAppSwitchValue;
+
+  bool _telegramAppSwitchValue = false;
   bool get telegramAppSwitchValue => _telegramAppSwitchValue;
 
   // MARK: -
@@ -51,44 +41,16 @@ class AnnouncementViewModel with ChangeNotifier {
   }) async {
     if (_fromCity != null &&
         _toCity != null &&
-        _toDateTime != null &&
-        _fromDateTime != null &&
+        _dateTime != null &&
         name.isNotEmpty) {
       if (phone.replaceAll(RegExp(r'[^0-9]'), '').length >= 11) {
         loadingStatus = LoadingStatus.searching;
         emptyRequiredFileds = false;
         notifyListeners();
 
-        DateTime from = DateTime(
-          _fromDateTime!.year,
-          _fromDateTime!.month,
-          _fromDateTime!.day,
-          _fromTime.hour,
-          _fromTime.minute,
-        );
-
-        String fromIso = DateTime.fromMillisecondsSinceEpoch(
-          from.millisecondsSinceEpoch,
-          isUtc: false,
-        ).toIso8601String();
-
-        DateTime to = DateTime(
-          _toDateTime!.year,
-          _toDateTime!.month,
-          _toDateTime!.day,
-          _toTime.hour,
-          _toTime.minute,
-        );
-
-        String toIso = DateTime.fromMillisecondsSinceEpoch(
-          to.millisecondsSinceEpoch,
-          isUtc: false,
-        ).toIso8601String();
-
         await AnnouncementsRepository()
             .sendAnnouncement(AnnouncementRequest(
-              departureDttm: fromIso,
-              arrivalDttm: toIso,
+              departureDttm: DateTime.now().toUtc(),
               parcelWeight: _weight,
               price: price,
               name: name,
@@ -108,12 +70,9 @@ class AnnouncementViewModel with ChangeNotifier {
                       loadingStatus = LoadingStatus.completed
                     }
                   else
-                    {
-                      error = response.toString(),
-                      loadingStatus = LoadingStatus.error
-                    },
-                  notifyListeners()
-                });
+                    loadingStatus = LoadingStatus.error,
+                })
+            .whenComplete(() => notifyListeners());
       } else {
         emptyRequiredFileds = true;
         notifyListeners();
@@ -127,27 +86,11 @@ class AnnouncementViewModel with ChangeNotifier {
   // MARK: -
   // MARK: - FUNCTIONS
 
-  Future changeDate(
-    DateTime? dateTime, {
-    required bool isFrom,
-  }) async {
+  Future changeDate(DateTime? dateTime) async {
     if (dateTime != null) {
-      if (isFrom) {
-        _fromDateTime = dateTime;
-      } else {
-        _toDateTime = dateTime;
-      }
-
+      _dateTime = dateTime;
       notifyListeners();
     }
-  }
-
-  void changeTime({
-    required DateTime dateTime,
-    required bool isFrom,
-  }) {
-    isFrom ? _fromTime = dateTime : _toTime = dateTime;
-    notifyListeners();
   }
 
   void changeWeight(double initialWeight) {
@@ -166,15 +109,11 @@ class AnnouncementViewModel with ChangeNotifier {
   bool validate({
     required String name,
     required String phone,
-  }) {
-    bool validate = phone.characters.length == 18 &&
-        _fromCity != null &&
-        _toCity != null &&
-        _fromDateTime != null &&
-        _toDateTime != null;
-
-    return validate;
-  }
+  }) =>
+      phone.characters.length == 18 &&
+      _fromCity != null &&
+      _toCity != null &&
+      _dateTime != null;
 
   // MARK: -
   // MARK: - ACTIONS

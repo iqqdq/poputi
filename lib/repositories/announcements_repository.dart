@@ -1,27 +1,38 @@
-import 'package:poputi/entities/request/announcement_request_model.dart';
-import 'package:poputi/entities/response/announcement_model.dart';
-import 'package:poputi/entities/response/announcements_model.dart';
-import 'package:poputi/services/pagination.dart';
-import 'package:poputi/services/urls.dart';
-import 'package:poputi/services/web_service.dart';
+import 'package:get_it/get_it.dart';
+import 'package:poputi/api/api.dart';
+import 'package:poputi/api/models/requests/requests.dart';
+import 'package:poputi/api/models/responses/responses.dart';
+import 'package:poputi/utils/utils.dart';
 
 class AnnouncementsRepository {
-  final webService = WebService();
+  final GetIt _getIt = GetIt.I;
 
   Future<Object> getAnnouncements(
     Pagination pagination,
-    String departureFrom,
-    String arrivalTo,
-    String departureDttmAfter,
-    String departureDttmBefore,
-    String arrivalDttmAfter,
-    String arrivalDttmBefore,
+    String? departureFrom,
+    String? arrivalTo,
   ) async {
-    dynamic json = await webService.get(
-        '$announcementsUrl?page=${pagination.number}&size=${pagination.size}&departure_from=$departureFrom&arrival_to=$arrivalTo&departure_dttm_after=$departureDttmAfter&departure_dttm_before=$departureDttmBefore&arrival_dttm_after=$arrivalDttmAfter&arrival_dttm_before=$arrivalDttmBefore&ordering=departure_dttm');
-
     try {
-      return Announcements.fromJson(json);
+      AnnouncementsResponse announcementsResponse =
+          await _getIt<ApiClient>().getAnnouncements(
+        '${pagination.number}',
+        '${pagination.size}',
+        departureFrom ?? '',
+        arrivalTo ?? '',
+      );
+
+      return announcementsResponse;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<Object> getAnnouncementsLast() async {
+    try {
+      AnnouncementsResponse announcementsResponse =
+          await _getIt<ApiClient>().getAnnouncementsLast();
+
+      return announcementsResponse;
     } catch (e) {
       return e.toString();
     }
@@ -29,13 +40,11 @@ class AnnouncementsRepository {
 
   Future<Object> sendAnnouncement(
       AnnouncementRequest announcementRequest) async {
-    dynamic json = await webService.post(
-      announcementsUrl,
-      announcementRequest.toJson(),
-    );
-
     try {
-      return Announcement.fromJson(json);
+      Announcement announcement =
+          await _getIt<ApiClient>().postAnnouncement(announcementRequest);
+
+      return announcement;
     } catch (e) {
       return e.toString();
     }

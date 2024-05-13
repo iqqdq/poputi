@@ -1,19 +1,20 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
 import 'package:flutter/material.dart';
-import 'package:poputi/entities/response/cities_model.dart';
-import 'package:poputi/entities/response/city_model.dart';
+import 'package:poputi/api/models/models.dart';
 import 'package:poputi/repositories/cities_repository.dart';
-import 'package:poputi/services/loading_status.dart';
-import 'package:poputi/services/pagination.dart';
+import 'package:poputi/utils/utils.dart';
 
 class CitiesViewModel with ChangeNotifier {
+  final City? city;
+
   LoadingStatus loadingStatus = LoadingStatus.searching;
-  Cities? _cities;
 
-  Cities? get cities => _cities;
+  CitiesResponse? _citiesResponse;
 
-  CitiesViewModel() {
+  List<City>? get cities => _citiesResponse?.results;
+
+  CitiesViewModel(this.city) {
     getCityList(
       Pagination(number: 1, size: 100),
       '',
@@ -27,37 +28,37 @@ class CitiesViewModel with ChangeNotifier {
     Pagination pagination,
     String search,
   ) async {
-    if (_cities != null) {
-      if (pagination.number > _cities!.pageCount) {
+    if (_citiesResponse != null) {
+      if (pagination.number > _citiesResponse!.pageCount) {
         return;
       }
     }
 
     if (pagination.number == 1) {
-      _cities = null;
+      _citiesResponse = null;
     }
 
     await CitiesRepository()
         .getCities(pagination, search)
         .then((response) => {
-              if (response is Cities)
+              if (response is CitiesResponse)
                 {
                   {
-                    if (_cities == null)
-                      {_cities = response}
+                    if (_citiesResponse == null)
+                      {_citiesResponse = response}
                     else
                       {
                         response.results.forEach((newCity) {
                           bool found = false;
 
-                          for (var city in _cities!.results) {
+                          for (var city in _citiesResponse!.results) {
                             if (city.id == newCity.id) {
                               found = true;
                             }
                           }
 
                           if (!found) {
-                            _cities!.results.add(newCity);
+                            _citiesResponse!.results.add(newCity);
                           }
                         })
                       }
@@ -73,15 +74,12 @@ class CitiesViewModel with ChangeNotifier {
   // MARK: -
   // MARK: - FUNCTIONS
 
-  // MARK: -
-  // MARK: - ACTIONS
-
   void selectCity(
     int index,
     Function(City) didReturnCity,
   ) {
-    if (_cities != null) {
-      didReturnCity(_cities!.results[index]);
+    if (_citiesResponse != null) {
+      didReturnCity(_citiesResponse!.results[index]);
     }
   }
 }

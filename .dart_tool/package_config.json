@@ -2,8 +2,20 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "_fe_analyzer_shared",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-64.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "adaptive_dialog",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/adaptive_dialog-1.10.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "analyzer",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/analyzer-6.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -44,16 +56,58 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "awesome_calendar",
-      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/awesome_calendar-1.1.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "boolean_selector",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "build",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/build-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "build_config",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/build_config-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_daemon",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/build_daemon-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "build_resolvers",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/build_resolvers-2.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "build_runner",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/build_runner-2.4.9",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "build_runner_core",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/build_runner_core-7.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "built_collection",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/built_collection-5.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "built_value",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/built_value-8.9.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "calendar_date_picker2",
@@ -86,6 +140,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "code_builder",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/code_builder-4.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "collection",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
@@ -108,6 +168,12 @@
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "dart_style",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/dart_style-2.3.6",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "dio",
@@ -140,6 +206,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "file",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/file-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/fixnum-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/iqqddq/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -156,6 +234,12 @@
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_localizations",
+      "rootUri": "file:///Users/iqqddq/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_phone_direct_caller",
@@ -182,8 +266,32 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "frontend_server_client",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/frontend_server_client-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "get_it",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/get_it-7.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "glob",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/glob-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "gradient_borders",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/gradient_borders-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "graphs",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/graphs-2.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -192,6 +300,12 @@
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/hexcolor-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "http_multi_server",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/http_multi_server-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "http_parser",
@@ -213,7 +327,13 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/intl-0.17.0",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/intl-0.18.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "io",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/io-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -230,10 +350,22 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "json_serializable",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/json_serializable-6.7.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "lints",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/lints-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/logging-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "macos_ui",
@@ -266,6 +398,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "mime",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/mime-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "modal_bottom_sheet",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/modal_bottom_sheet-2.1.2",
       "packageUri": "lib/",
@@ -280,6 +418,12 @@
     {
       "name": "notification_center",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/notification_center-0.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_config",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/package_config-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -314,16 +458,82 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "pool",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/pool-1.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "protobuf",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/protobuf-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "provider",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/provider-6.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
+      "name": "pub_semver",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "pubspec_parse",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/pubspec_parse-1.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "pull_to_refresh",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/pull_to_refresh-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "retrofit",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/retrofit-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "retrofit_generator",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/retrofit_generator-8.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shelf",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/shelf-1.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "shelf_web_socket",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/shelf_web_socket-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/iqqddq/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "source_gen",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/source_gen-1.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "source_helper",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/source_helper-1.3.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "source_span",
@@ -342,6 +552,12 @@
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/stream_channel-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "stream_transform",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/stream_transform-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
     },
     {
       "name": "string_scanner",
@@ -366,6 +582,18 @@
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/text_mask-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.15"
+    },
+    {
+      "name": "timing",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/timing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "tuple",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/tuple-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "typed_data",
@@ -428,10 +656,22 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "watcher",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/watcher-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "web",
       "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/web-0.1.4-beta",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "web_socket_channel",
+      "rootUri": "file:///Users/iqqddq/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "wheel_chooser",
@@ -458,7 +698,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-04-13T23:45:20.451071Z",
+  "generated": "2024-05-12T23:19:57.081786Z",
   "generator": "pub",
   "generatorVersion": "3.2.0-22.0.dev"
 }
