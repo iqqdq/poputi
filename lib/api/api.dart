@@ -8,16 +8,6 @@ part 'api.g.dart';
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
-  factory ApiClient.create({String? apiUrl}) {
-    final dio = Dio();
-
-    if (apiUrl != null) {
-      return ApiClient(dio, baseUrl: apiUrl);
-    }
-
-    return ApiClient(dio);
-  }
-
   @GET('cities/')
   Future<CitiesResponse> getCities(
     @Query('page') String page,
@@ -28,8 +18,8 @@ abstract class ApiClient {
   Future<AnnouncementsResponse> getAnnouncements(
     @Query('page') String page,
     @Query('size') String size,
-    @Query('departureFrom') String departureFrom,
-    @Query('arrivalTo') String arrivalTo,
+    @Query('departure_from') String departureFrom,
+    @Query('arrival_to') String arrivalTo,
   );
 
   @GET('announcements_last/')

@@ -4,13 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:poputi/api/api.dart';
+import 'package:talker/talker.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'feauters/feauters.dart';
 import 'constants/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  GetIt.I.registerLazySingleton<ApiClient>(() => ApiClient(Dio()));
+  final dio = Dio();
+  dio.interceptors.add(
+    TalkerDioLogger(
+      settings: TalkerDioLoggerSettings(
+        printRequestHeaders: true,
+        printRequestData: false,
+        printResponseHeaders: false,
+        printResponseMessage: true,
+        printResponseData: true,
+        requestPen: AnsiPen()..blue(),
+        responsePen: AnsiPen()..green(),
+        errorPen: AnsiPen()..red(),
+      ),
+    ),
+  );
+
+  GetIt.I.registerLazySingleton<ApiClient>(() => ApiClient(dio));
 
   runApp(const PoPutiApp());
 }

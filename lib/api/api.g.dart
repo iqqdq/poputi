@@ -64,8 +64,8 @@ class _ApiClient implements ApiClient {
     final queryParameters = <String, dynamic>{
       r'page': page,
       r'size': size,
-      r'departureFrom': departureFrom,
-      r'arrivalTo': arrivalTo,
+      r'departure_from': departureFrom,
+      r'arrival_to': arrivalTo,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
