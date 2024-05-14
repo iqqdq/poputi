@@ -74,62 +74,66 @@ class _CityScreenBodyState extends State<CitiesScreenBodyWidget> {
     );
 
     return Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          backgroundColor: HexColors.white,
-          surfaceTintColor: Colors.transparent,
-          elevation: 0.0,
-          titleSpacing: 0.0,
-          automaticallyImplyLeading: true,
-          title:
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        backgroundColor: HexColors.white,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0.0,
+        titleSpacing: 0.0,
+        automaticallyImplyLeading: true,
+        title:
 
-              /// SEARCH INPUT
-              Padding(
-            padding: const EdgeInsets.only(right: 20.0),
-            child: InputWidget(
-              textEditingController: _textEditingController,
-              focusNode: _focusNode,
-              placeholder: Titles.search,
-              isRequiredField: false,
-              onChanged: (text) => _onSearchTextChange(),
-              onFieldSubmitted: () => FocusScope.of(context).unfocus(),
-            ),
+            /// SEARCH INPUT
+            Padding(
+          padding: const EdgeInsets.only(right: 20.0),
+          child: InputWidget(
+            textEditingController: _textEditingController,
+            focusNode: _focusNode,
+            placeholder: Titles.search,
+            isRequiredField: false,
+            onChanged: (text) => _onSearchTextChange(),
+            onFieldSubmitted: () => FocusScope.of(context).unfocus(),
           ),
         ),
-        body: InkWell(
-          child: Stack(children: [
-            /// CITY LIST VIEW
-            _isSearching
-                ? Container()
-                : CitiesListView(
-                    scrollController: _scrollController,
-                    cities: _citiesViewModel.cities ?? [],
-                    onTap: (index) => _citiesViewModel.selectCity(
-                        index,
-                        (city) => {
-                              widget.didReturnCity(city),
-                              Navigator.pop(context),
-                            }),
-                  ),
+      ),
+      body: SizedBox.expand(
+        child: Container(
+          color: HexColors.white,
+          child: InkWell(
+            child: Stack(children: [
+              /// CITY LIST VIEW
+              _isSearching
+                  ? Container()
+                  : CitiesListView(
+                      scrollController: _scrollController,
+                      cities: _citiesViewModel.cities,
+                      onTap: (index) => _citiesViewModel.selectCity(
+                          index,
+                          (city) => {
+                                widget.didReturnCity(city),
+                                Navigator.pop(context),
+                              }),
+                    ),
 
-            /// NO RESULT TEXT
-            _citiesViewModel.cities != null
-                ? Container()
-                : _citiesViewModel.loadingStatus == LoadingStatus.searching
-                    ? Container()
-                    : _citiesViewModel.loadingStatus ==
-                                LoadingStatus.completed &&
-                            _citiesViewModel.cities!.isEmpty
-                        ? const NoResultsWidget()
-                        : Container(),
+              /// NO RESULT TEXT
+              _citiesViewModel.loadingStatus == LoadingStatus.searching
+                  ? Container()
+                  : _isSearching
+                      ? Container()
+                      : _citiesViewModel.cities.isEmpty
+                          ? const NoResultsWidget()
+                          : Container(),
 
-            /// INDICATOR
-            _isSearching ||
-                    _citiesViewModel.loadingStatus == LoadingStatus.searching
-                ? const Center(child: IndicatorWidget())
-                : Container(),
-          ]),
-        ));
+              /// INDICATOR
+              _isSearching ||
+                      _citiesViewModel.loadingStatus == LoadingStatus.searching
+                  ? const Center(child: IndicatorWidget())
+                  : Container(),
+            ]),
+          ),
+        ),
+      ),
+    );
   }
 
   void _onSearchTextChange() {

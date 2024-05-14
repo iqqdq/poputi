@@ -16,10 +16,9 @@ extension DateTimeFormatter on DateTime {
     bool isToday =
         this.year == now.year && this.month == now.month && this.day == now.day;
 
-    bool isYesterday =
-        this.year == now.subtract(const Duration(days: 1)).year &&
-            this.month == now.subtract(const Duration(days: 1)).month &&
-            this.day == now.subtract(const Duration(days: 1)).day;
+    bool isYesterday = this.year == now.year &&
+        this.month == now.month &&
+        this.day == now.subtract(const Duration(days: 1)).day;
 
     final day = isYesterday
         ? localeName.contains('en')
@@ -50,7 +49,7 @@ extension DateTimeFormatter on DateTime {
             ? '$day в $hour:$minute'
             : day
         : showTime
-            ? '$day.$month.$year в $hour:$minute'
+            ? '$day.$month.$year, $hour:$minute'
             : '$day.$month.$year';
 
     return date;

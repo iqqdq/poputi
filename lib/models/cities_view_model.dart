@@ -12,7 +12,7 @@ class CitiesViewModel with ChangeNotifier {
 
   CitiesResponse? _citiesResponse;
 
-  List<City>? get cities => _citiesResponse?.results;
+  List<City> get cities => _citiesResponse?.results ?? [];
 
   CitiesViewModel(this.city) {
     getCityList(

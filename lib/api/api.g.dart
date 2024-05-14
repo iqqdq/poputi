@@ -24,11 +24,13 @@ class _ApiClient implements ApiClient {
   Future<CitiesResponse> getCities(
     String page,
     String size,
+    String search,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'page': page,
       r'size': size,
+      r'search': search,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

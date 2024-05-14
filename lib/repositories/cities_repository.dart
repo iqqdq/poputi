@@ -12,6 +12,7 @@ class CitiesRepository {
       CitiesResponse citiesResponse = await GetIt.I<ApiClient>().getCities(
         '${pagination.number}',
         '${pagination.size}',
+        search,
       );
 
       return citiesResponse;

@@ -58,6 +58,9 @@ class _PrivacyPolicyScreenBodyState
     );
   }
 
-  void _loadAsset() => setState(() async => _privacyPolicyText =
-      await rootBundle.loadString('assets/privacy_policy.txt'));
+  Future _loadAsset() async {
+    _privacyPolicyText =
+        await rootBundle.loadString('assets/privacy_policy.txt');
+    setState(() {});
+  }
 }

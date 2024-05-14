@@ -28,6 +28,7 @@ class _SearchScreenBodyState extends State<SearchScreenBodyWidget> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     NotificationCenter().unsubscribe('announcement_success_message');
     super.dispose();
   }
@@ -68,7 +69,7 @@ class _SearchScreenBodyState extends State<SearchScreenBodyWidget> {
           /// ANNOUNCEMENT SLIVER LIST
           AnnouncementsSliverList(
             announcements: _searchViewModel.announcements ?? [],
-            bottomPadding: MediaQuery.of(context).padding.bottom,
+            bottomPadding: MediaQuery.of(context).padding.bottom + 80.0,
             onPhoneTap: (index) => _searchViewModel.call(index),
             openWhatsApp: (index) => _searchViewModel.openWhatsApp(index),
             openTelegram: (index) => _searchViewModel.openTelegram(index),
@@ -94,7 +95,7 @@ class _SearchScreenBodyState extends State<SearchScreenBodyWidget> {
           () => {
                 showOkAlertDialog(
                   context: context,
-                  title: Titles.success,
+                  title: Titles.alert,
                   message: Titles.announcement_success_message,
                 ),
                 _searchViewModel.getLastAnnouncementList(),

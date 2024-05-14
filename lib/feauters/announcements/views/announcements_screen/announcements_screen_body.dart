@@ -109,8 +109,7 @@ class _AnnouncementsScreenBodyState
 
                     /// ANNOUNCEMENT SLIVER LIST
                     AnnouncementsSliverList(
-                      announcements:
-                          _announcementsViewModel.announcements ?? [],
+                      announcements: _announcementsViewModel.announcements,
                       bottomPadding: MediaQuery.of(context).padding.bottom,
                       onPhoneTap: (index) =>
                           _announcementsViewModel.call(index),
@@ -123,16 +122,11 @@ class _AnnouncementsScreenBodyState
             ),
 
             /// NO RESULT TEXT
-            _announcementsViewModel.announcements != null
+            _announcementsViewModel.loadingStatus == LoadingStatus.searching
                 ? Container()
-                : _announcementsViewModel.loadingStatus ==
-                        LoadingStatus.searching
-                    ? Container()
-                    : _announcementsViewModel.loadingStatus ==
-                                LoadingStatus.completed &&
-                            _announcementsViewModel.announcements!.isEmpty
-                        ? const NoResultsWidget()
-                        : Container(),
+                : _announcementsViewModel.announcements.isEmpty
+                    ? const NoResultsWidget()
+                    : Container(),
 
             /// INDICATOR
             _announcementsViewModel.loadingStatus == LoadingStatus.searching

@@ -32,9 +32,8 @@ abstract class Titles {
   static const departureDate = 'Дата поездки:';
   static const cancel = 'Отмена';
   static const reset = 'Сбросить';
-  static const success = 'Успешно';
   static const announcement_success_message = 'Ваше объявление было добавлено';
-  static const warning = 'Внимание';
+  static const alert = 'Внимание';
   static const required_fields_message =
       'Пожалуйста, заполните все обязательные поля';
   static const invalid_phone = 'Неверный формат номера телефона';

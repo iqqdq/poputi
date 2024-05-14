@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:poputi/api/models/models.dart';
+import 'package:poputi/extensions/extensions.dart';
 import 'package:poputi/repositories/announcements_repository.dart';
 import 'package:poputi/utils/utils.dart';
 import 'package:android_intent_plus/android_intent.dart';
@@ -23,7 +24,7 @@ class AnnouncementsViewModel with ChangeNotifier {
   City? get toCity => _toCity;
 
   AnnouncementsResponse? _announcementsResponse;
-  List<Announcement>? get announcements => _announcementsResponse?.results;
+  List<Announcement> get announcements => _announcementsResponse?.results ?? [];
 
   AnnouncementsViewModel(
     this.selectedFromCity,
@@ -90,6 +91,8 @@ class AnnouncementsViewModel with ChangeNotifier {
                         })
                       }
                   },
+                  _announcementsResponse!.results.removeWhere(
+                      (element) => !element.departureDttm.toLocal().isActual()),
                   loadingStatus = LoadingStatus.completed
                 }
               else

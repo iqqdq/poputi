@@ -12,6 +12,7 @@ abstract class ApiClient {
   Future<CitiesResponse> getCities(
     @Query('page') String page,
     @Query('size') String size,
+    @Query('search') String search,
   );
 
   @GET('announcements/')
