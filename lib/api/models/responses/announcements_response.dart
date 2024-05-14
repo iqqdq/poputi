@@ -13,11 +13,11 @@ class AnnouncementsResponse {
     required this.results,
   });
 
-  int count;
-  int pageCount;
-  String? next;
-  String? previous;
-  List<Announcement> results;
+  final int count;
+  final int pageCount;
+  final String? next;
+  final String? previous;
+  final List<Announcement> results;
 
   Map<String, dynamic> toJson() => _$AnnouncementsResponseToJson(this);
 

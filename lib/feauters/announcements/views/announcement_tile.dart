@@ -135,7 +135,7 @@ class _AnnouncementTileState extends State<AnnouncementTile> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Text(
-              '${Titles.departureDate} ${widget.departureDttm.toLocal().toDate(showTime: false).toLowerCase()}',
+              '${Titles.departureDate} ${widget.departureDttm.toDate(showTime: false).toLowerCase()}',
               style: TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.w500,
@@ -174,7 +174,7 @@ class _AnnouncementTileState extends State<AnnouncementTile> {
 
                 /// CREATED AT
                 Text(
-                    '${Titles.added} ${widget.createdAt.toLocal().toDate(showTime: true).toLowerCase()}',
+                    '${Titles.added} ${widget.createdAt.toDate(showTime: true).toLowerCase()}',
                     textAlign: TextAlign.end,
                     style: TextStyle(
                       fontSize: 12.0,

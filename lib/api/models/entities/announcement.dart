@@ -21,19 +21,19 @@ class Announcement {
     required this.arrivalTo,
   });
 
-  int id;
-  bool? isDeleted;
-  DateTime createdAt;
-  double? price;
-  DateTime departureDttm;
-  double parcelWeight;
-  String name;
-  String phone;
-  String comment;
-  bool hasWhatsapp;
-  bool hasTelegram;
-  City departureFrom;
-  City arrivalTo;
+  final int id;
+  final bool? isDeleted;
+  final DateTime createdAt;
+  final double? price;
+  final DateTime departureDttm;
+  final double parcelWeight;
+  final String name;
+  final String phone;
+  final String comment;
+  final bool hasWhatsapp;
+  final bool hasTelegram;
+  final City departureFrom;
+  final City arrivalTo;
 
   Map<String, dynamic> toJson() => _$AnnouncementToJson(this);
 

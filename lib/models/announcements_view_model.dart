@@ -92,7 +92,7 @@ class AnnouncementsViewModel with ChangeNotifier {
                       }
                   },
                   _announcementsResponse!.results.removeWhere(
-                      (element) => !element.departureDttm.toLocal().isActual()),
+                      (element) => element.departureDttm.isActual()),
                   loadingStatus = LoadingStatus.completed
                 }
               else

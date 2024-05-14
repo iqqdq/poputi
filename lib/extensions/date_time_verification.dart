@@ -1,7 +1,12 @@
 extension DateTimeVerification on DateTime {
   bool isActual() {
-    DateTime now = DateTime.now().toLocal();
+    DateTime local = toLocal();
+    DateTime dateTime = DateTime(local.year, local.month, local.day, 0, 0, 0);
 
-    return year == now.year && month == now.month && day >= now.day;
+    DateTime localNow = DateTime.now().toLocal();
+    DateTime now =
+        DateTime(localNow.year, localNow.month, localNow.day, 0, 0, 0);
+
+    return dateTime.isBefore(now);
   }
 }

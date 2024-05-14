@@ -14,7 +14,6 @@ class InputWidget extends StatefulWidget {
   final TextCapitalization? textCapitalization;
   final bool? removeClearButton;
   final bool isRequiredField;
-  final bool? showRequiredField;
   final String? placeholder;
   final Function(String)? onChanged;
   final VoidCallback? onTap;
@@ -32,7 +31,6 @@ class InputWidget extends StatefulWidget {
     this.textCapitalization,
     this.removeClearButton,
     required this.isRequiredField,
-    this.showRequiredField,
     this.placeholder,
     this.onChanged,
     this.onTap,
@@ -138,15 +136,13 @@ class _InputState extends State<InputWidget> {
       height: 47.0,
       padding: const EdgeInsets.only(left: 12.0, right: 4.0),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.0),
-          border: Border.all(
-              width: 0.5,
-              color: widget.showRequiredField == null
-                  ? HexColors.light_gray
-                  : widget.showRequiredField == true
-                      ? HexColors.red
-                      : HexColors.light_gray),
-          color: HexColors.light_gray),
+        borderRadius: BorderRadius.circular(16.0),
+        border: Border.all(
+          width: 0.5,
+          color: HexColors.light_gray,
+        ),
+        color: HexColors.light_gray,
+      ),
       child: textFormField,
     );
   }

@@ -19,9 +19,6 @@ class AnnouncementScreenBodyWidget extends StatefulWidget {
 }
 
 class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
-  final _priceTextEditingController = TextEditingController();
-  final _priceFocusNode = FocusNode();
-
   final _nameTextEditingController = TextEditingController();
   final _nameFocusNode = FocusNode();
 
@@ -48,9 +45,6 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
 
     _phoneTextEditingController.dispose();
     _phoneFocusNode.dispose();
-
-    _priceTextEditingController.dispose();
-    _priceFocusNode.dispose();
 
     _commentTextEditingController.dispose();
     _commentFocusNode.dispose();
@@ -96,16 +90,14 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                   children: [
                     /// FROM BUTTON
                     ButtonWidget(
-                        title: _announcementViewModel.fromCity?.name ??
-                            '${Titles.from} *',
-                        titleColor: _announcementViewModel.fromCity == null
-                            ? HexColors.gray
-                            : HexColors.dark,
-                        isRequiredField: true,
-                        showRequiredField:
-                            _announcementViewModel.emptyRequiredFileds &&
-                                _announcementViewModel.fromCity == null,
-                        onTap: () => _showCitiesScreen(isFrom: true)),
+                      title: _announcementViewModel.fromCity?.name ??
+                          '${Titles.from} *',
+                      titleColor: _announcementViewModel.fromCity == null
+                          ? HexColors.gray
+                          : HexColors.dark,
+                      isRequiredField: true,
+                      onTap: () => _showCitiesScreen(isFrom: true),
+                    ),
                     const SizedBox(height: 14.0),
 
                     /// TO BUTTON
@@ -116,9 +108,6 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                           ? HexColors.gray
                           : HexColors.dark,
                       isRequiredField: true,
-                      showRequiredField:
-                          _announcementViewModel.emptyRequiredFileds &&
-                              _announcementViewModel.toCity == null,
                       onTap: () => _showCitiesScreen(isFrom: false),
                     ),
                     const SizedBox(height: 14.0),
@@ -144,9 +133,6 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                                       ? HexColors.gray
                                       : HexColors.dark,
                               isRequiredField: true,
-                              showRequiredField:
-                                  _announcementViewModel.emptyRequiredFileds &&
-                                      _announcementViewModel.dateTime == null,
                               onTap: () => _selectDate(),
                             )
                           ]),
@@ -168,9 +154,6 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                       placeholder: '${Titles.name} *',
                       isRequiredField: true,
                       onChanged: (text) => setState(() {}),
-                      showRequiredField:
-                          _announcementViewModel.emptyRequiredFileds &&
-                              _nameTextEditingController.text.isEmpty,
                       onFieldSubmitted: () => _phoneFocusNode.requestFocus(),
                     ),
                     const SizedBox(height: 14.0),
@@ -184,9 +167,6 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                       placeholder: '${Titles.phone} *',
                       isRequiredField: true,
                       onChanged: (text) => setState(() {}),
-                      showRequiredField:
-                          _announcementViewModel.emptyRequiredFileds &&
-                              _phoneTextEditingController.text.isEmpty,
                       onFieldSubmitted: () => _commentFocusNode.requestFocus(),
                     ),
                     const SizedBox(height: 14.0),
@@ -291,10 +271,6 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
                         fontWeight: FontWeight.w600,
                         isRequiredField: false,
                         onTap: () => _createAnnouncement(
-                              double.tryParse(
-                                      _priceTextEditingController.text) ??
-                                  0.0,
-                              context: context,
                               name: _nameTextEditingController.text,
                               phone: _phoneTextEditingController.text,
                               comment: _commentTextEditingController.text,
@@ -330,16 +306,13 @@ class _AnnouncementScreenBodyState extends State<AnnouncementScreenBodyWidget> {
         ),
       ));
 
-  void _createAnnouncement(
-    double? price, {
-    required BuildContext context,
+  void _createAnnouncement({
     required String name,
     required String phone,
     required String comment,
   }) {
     _announcementViewModel
         .createAnnouncement(
-          price,
           name: name,
           phone: phone,
           comment: comment,

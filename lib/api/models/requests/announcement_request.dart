@@ -6,7 +6,7 @@ part 'announcement_request.g.dart';
 class AnnouncementRequest {
   AnnouncementRequest({
     required this.parcelWeight,
-    this.price,
+    required this.price,
     required this.name,
     required this.phone,
     required this.comment,
@@ -17,16 +17,16 @@ class AnnouncementRequest {
     required this.departureDttm,
   });
 
-  double parcelWeight;
-  double? price;
-  String name;
-  String phone;
-  String comment;
-  bool hasWhatsapp;
-  bool hasTelegram;
-  int departureFrom;
-  int arrivalTo;
-  DateTime departureDttm;
+  final double parcelWeight;
+  final double price;
+  final String name;
+  final String phone;
+  final String comment;
+  final bool hasWhatsapp;
+  final bool hasTelegram;
+  final int departureFrom;
+  final int arrivalTo;
+  final DateTime departureDttm;
 
   Map<String, dynamic> toJson() => _$AnnouncementRequestToJson(this);
 

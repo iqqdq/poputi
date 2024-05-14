@@ -9,7 +9,7 @@ part of 'announcement_request.dart';
 AnnouncementRequest _$AnnouncementRequestFromJson(Map<String, dynamic> json) =>
     AnnouncementRequest(
       parcelWeight: (json['parcelWeight'] as num).toDouble(),
-      price: (json['price'] as num?)?.toDouble(),
+      price: (json['price'] as num).toDouble(),
       name: json['name'] as String,
       phone: json['phone'] as String,
       comment: json['comment'] as String,

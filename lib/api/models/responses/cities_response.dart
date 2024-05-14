@@ -13,11 +13,11 @@ class CitiesResponse {
     required this.results,
   });
 
-  int count;
-  int pageCount;
-  String? next;
-  String? previous;
-  List<City> results;
+  final int count;
+  final int pageCount;
+  final String? next;
+  final String? previous;
+  final List<City> results;
 
   Map<String, dynamic> toJson() => _$CitiesResponseToJson(this);
 

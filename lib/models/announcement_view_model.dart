@@ -7,7 +7,6 @@ import 'package:poputi/utils/utils.dart';
 
 class AnnouncementViewModel with ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.empty;
-  bool emptyRequiredFileds = false;
 
   Announcement? _announcement;
   Announcement? get announcement => _announcement;
@@ -21,9 +20,6 @@ class AnnouncementViewModel with ChangeNotifier {
   DateTime? _dateTime;
   DateTime? get dateTime => _dateTime;
 
-  double _weight = 5.0;
-  double get weight => _weight;
-
   bool _whatsAppSwitchValue = false;
   bool get whatsAppSwitchValue => _whatsAppSwitchValue;
 
@@ -33,54 +29,36 @@ class AnnouncementViewModel with ChangeNotifier {
   // MARK: -
   // MARK: - API CALL
 
-  Future createAnnouncement(
-    double? price, {
+  Future createAnnouncement({
     required String name,
     required String phone,
     required String comment,
   }) async {
-    if (_fromCity != null &&
-        _toCity != null &&
-        _dateTime != null &&
-        name.isNotEmpty) {
-      if (phone.replaceAll(RegExp(r'[^0-9]'), '').length >= 11) {
-        loadingStatus = LoadingStatus.searching;
-        emptyRequiredFileds = false;
-        notifyListeners();
+    loadingStatus = LoadingStatus.searching;
 
-        await AnnouncementsRepository()
-            .sendAnnouncement(AnnouncementRequest(
-              departureDttm: DateTime.now().toUtc(),
-              parcelWeight: _weight,
-              price: price,
-              name: name,
-              phone: phone.contains('+')
-                  ? '+${phone.replaceAll(RegExp(r'[^0-9]'), '')}'
-                  : phone.replaceAll(RegExp(r'[^0-9]'), ''),
-              comment: comment,
-              hasWhatsapp: _whatsAppSwitchValue,
-              hasTelegram: _telegramAppSwitchValue,
-              departureFrom: _fromCity!.id,
-              arrivalTo: _toCity!.id,
-            ))
-            .then((response) => {
-                  if (response is Announcement)
-                    {
-                      _announcement = response,
-                      loadingStatus = LoadingStatus.completed
-                    }
-                  else
-                    loadingStatus = LoadingStatus.error,
-                })
-            .whenComplete(() => notifyListeners());
-      } else {
-        emptyRequiredFileds = true;
-        notifyListeners();
-      }
-    } else {
-      emptyRequiredFileds = true;
-      notifyListeners();
-    }
+    await AnnouncementsRepository()
+        .sendAnnouncement(AnnouncementRequest(
+          departureFrom: _fromCity!.id,
+          arrivalTo: _toCity!.id,
+          departureDttm: _dateTime!.toUtc(),
+          name: name,
+          phone: phone,
+          hasWhatsapp: _whatsAppSwitchValue,
+          hasTelegram: _telegramAppSwitchValue,
+          comment: comment,
+          price: 0.0,
+          parcelWeight: 0.0,
+        ))
+        .then((response) => {
+              if (response is Announcement)
+                {
+                  _announcement = response,
+                  loadingStatus = LoadingStatus.completed
+                }
+              else
+                loadingStatus = LoadingStatus.error,
+            })
+        .whenComplete(() => notifyListeners());
   }
 
   // MARK: -
@@ -91,11 +69,6 @@ class AnnouncementViewModel with ChangeNotifier {
       _dateTime = dateTime;
       notifyListeners();
     }
-  }
-
-  void changeWeight(double initialWeight) {
-    _weight = weight;
-    notifyListeners();
   }
 
   void changeSwitchValue({

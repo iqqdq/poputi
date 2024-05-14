@@ -11,14 +11,21 @@ extension DateTimeFormatter on DateTime {
     );
 
     String date = '';
+
+    DateTime local = toLocal();
     DateTime now = DateTime.now().toLocal();
 
-    bool isToday =
-        this.year == now.year && this.month == now.month && this.day == now.day;
+    bool isYesterday = local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.subtract(const Duration(days: 1)).day;
 
-    bool isYesterday = this.year == now.year &&
-        this.month == now.month &&
-        this.day == now.subtract(const Duration(days: 1)).day;
+    bool isToday = local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.day;
+
+    bool isTomorrow = local.year == now.year &&
+        local.month == now.month &&
+        local.day == now.add(const Duration(days: 1)).day;
 
     final day = isYesterday
         ? localeName.contains('en')
@@ -28,23 +35,28 @@ extension DateTimeFormatter on DateTime {
             ? localeName.contains('en')
                 ? 'Today'
                 : 'Сегодня'
-            : this.day.toString().length == 1
-                ? '0${this.day}'
-                : '${this.day}';
+            : isTomorrow
+                ? localeName.contains('en')
+                    ? 'Tomorrow'
+                    : 'Завтра'
+                : local.day.toString().length == 1
+                    ? '0${local.day}'
+                    : '${local.day}';
 
-    final month =
-        this.month.toString().length == 1 ? '0${this.month}' : '${this.month}';
+    final month = local.month.toString().length == 1
+        ? '0${local.month}'
+        : '${local.month}';
 
-    final year = '${this.year}';
+    final year = '${local.year}';
 
     final hour =
-        this.hour.toString().length == 1 ? '0${this.hour}' : '${this.hour}';
+        local.hour.toString().length == 1 ? '0${local.hour}' : '${local.hour}';
 
-    final minute = this.minute.toString().length == 1
-        ? '0${this.minute}'
-        : '${this.minute}';
+    final minute = local.minute.toString().length == 1
+        ? '0${local.minute}'
+        : '${local.minute}';
 
-    date = isYesterday || isToday
+    date = isYesterday || isToday || isTomorrow
         ? showTime
             ? '$day в $hour:$minute'
             : day

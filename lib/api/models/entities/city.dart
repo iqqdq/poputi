@@ -11,10 +11,10 @@ class City {
     required this.name,
   });
 
-  int id;
-  bool isDeleted;
-  String createdAt;
-  String name;
+  final int id;
+  final bool isDeleted;
+  final String createdAt;
+  final String name;
 
   Map<String, dynamic> toJson() => _$CityToJson(this);
 
