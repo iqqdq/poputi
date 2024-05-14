@@ -9,7 +9,7 @@ class SearchSliverAppBar extends StatelessWidget {
     return SliverAppBar(
       pinned: true,
       toolbarHeight: 0.0,
-      expandedHeight: 134.0,
+      expandedHeight: 138.0,
       elevation: 0.0,
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,

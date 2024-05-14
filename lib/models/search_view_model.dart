@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:poputi/api/models/models.dart';
 import 'package:poputi/repositories/announcements_repository.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:poputi/helpers/helpers.dart';
 
 class SearchViewModel extends ChangeNotifier {
   City? _fromCity;
@@ -60,44 +57,16 @@ class SearchViewModel extends ChangeNotifier {
   // MARK: -
   // MARK: - ACTIONS
 
-  Future openWhatsApp(int index) async {
-    if (_announcementsResponse != null) {
-      final url =
-          "whatsapp://send?phone=${_announcementsResponse!.results[index].phone}";
+  Future openWhatsApp(int index) async => openMessenger(
+        isWhatsApp: true,
+        phone: _announcementsResponse!.results[index].phone,
+      );
 
-      if (Platform.isAndroid) {
-        AndroidIntent(
-          action: 'android.intent.action.VIEW',
-          data: url,
-        ).launch();
-      } else if (Platform.isIOS) {
-        await canLaunchUrl(Uri.parse(url))
-            ? launchUrl(Uri.parse(url))
-            : launchUrlString(url);
-      }
-    }
-  }
+  Future openTelegram(int index) async => openMessenger(
+        isWhatsApp: false,
+        phone: _announcementsResponse!.results[index].phone,
+      );
 
-  Future openTelegram(int index) async {
-    if (_announcementsResponse != null) {
-      final url =
-          "tg://resolve?phone=${_announcementsResponse!.results[index].phone}";
-
-      if (Platform.isAndroid) {
-        AndroidIntent(
-          action: 'android.intent.action.VIEW',
-          data: url,
-        ).launch();
-      } else if (Platform.isIOS) {
-        await canLaunchUrl(Uri.parse(url))
-            ? launchUrl(Uri.parse(url))
-            : launchUrlString(url);
-      }
-    }
-  }
-
-  Future call(int index) async {
-    await FlutterPhoneDirectCaller.callNumber(
-        _announcementsResponse!.results[index].phone);
-  }
+  Future call(int index) async => await FlutterPhoneDirectCaller.callNumber(
+      _announcementsResponse!.results[index].phone);
 }
