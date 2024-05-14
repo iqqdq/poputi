@@ -1,5 +1,5 @@
 extension DateTimeVerification on DateTime {
-  bool isActual() {
+  bool isPast() {
     DateTime local = toLocal();
     DateTime dateTime = DateTime(local.year, local.month, local.day, 0, 0, 0);
 

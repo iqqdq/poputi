@@ -91,8 +91,8 @@ class AnnouncementsViewModel with ChangeNotifier {
                         })
                       }
                   },
-                  _announcementsResponse!.results.removeWhere(
-                      (element) => element.departureDttm.isActual()),
+                  _announcementsResponse!.results
+                      .removeWhere((element) => element.departureDttm.isPast()),
                   loadingStatus = LoadingStatus.completed
                 }
               else
